@@ -1,10 +1,16 @@
 import path from 'node:path';
-import {fs, logger} from '@appium/support';
+import {once} from 'node:events';
+import {fs, logger, node} from '@appium/support';
 import net from 'node:net';
 
 const log = logger.getLogger('fixtures');
 
 export const UDID = '63c3d055c4f83e960e5980fa68be0fbf7d4ba74c';
+const FIXTURE_ROOT = path.resolve(
+  /** @type {string} */ (node.getModuleRootSync('appium-ios-device', __filename)),
+  'test',
+  'fixtures',
+);
 
 let fixtureContents;
 
@@ -36,17 +42,19 @@ export async function getServerWithFixtures(...args) {
   const fixturesToUse = args.map((key) => fixtureContents[key]);
 
   const server = net.createServer();
-  server.listen();
-  const socket = net.connect(server.address());
-  server.on('connection', function (socket) {
+  server.on('connection', function (clientSocket) {
     let i = 0;
-    socket.on('data', function () {
+    clientSocket.on('data', function () {
       if (i < fixturesToUse.length) {
         log.debug(`Writing to socket. Message #${i}`);
-        socket.write(fixturesToUse[i++]);
+        clientSocket.write(fixturesToUse[i++]);
       }
     });
   });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  const {port, address} = /** @type {import('node:net').AddressInfo} */ (server.address());
+  const socket = net.connect(port, address);
   return {
     server,
     socket,
@@ -54,7 +62,7 @@ export async function getServerWithFixtures(...args) {
 }
 
 function getFixturePath(file) {
-  return path.resolve(__dirname, file);
+  return path.join(FIXTURE_ROOT, file);
 }
 
 async function initFixtures() {
