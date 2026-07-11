@@ -1,3 +1,9 @@
+## [3.1.18](https://github.com/appium/appium-ios-device/compare/v3.1.17...v3.1.18) (2026-07-11)
+
+### Miscellaneous Chores
+
+* Drop mocha ([#234](https://github.com/appium/appium-ios-device/issues/234)) ([228c6fb](https://github.com/appium/appium-ios-device/commit/228c6fb10433917a2e840b257ce7e9a1a7cea056))
+
 ## [3.1.17](https://github.com/appium/appium-ios-device/compare/v3.1.16...v3.1.17) (2026-07-01)
 
 ### Miscellaneous Chores
