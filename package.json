@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@appium/support": "^7.2.9",
-    "asyncbox": "^6.4.3",
+    "asyncbox": "^7.1.0",
     "axios": "^1.18.0",
     "bplist-creator": "^0.x",
     "bplist-parser": "^0.x",
